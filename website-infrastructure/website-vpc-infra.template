@@ -1,3 +1,4 @@
+{
   "Resources": {
     "AZ101APPSUB": {
       "Type": "AWS::EC2::Subnet",
@@ -10,9 +11,7 @@
 		"CidrBlock" : "172.16.101.0/24",
 		"VpcId" : { "Ref" : "PRODVPC" }
  	},
-      "Metadata": {
-        }
-      },
+      "Metadata": {},
       "DependsOn": [
         "PRODVPC"
       ]
@@ -28,9 +27,7 @@
 		"CidrBlock" : "172.16.111.0/24",
 		"VpcId" : { "Ref" : "PRODVPC"}
 	},
-      "Metadata": {
-        }
-      },
+      "Metadata": {},
       "DependsOn": [
         "PRODVPC"
       ]
@@ -42,22 +39,52 @@
 			"Key" : "Name",
 			"Value" : "CZEXTAPPSUB"
 		} ],
+		"AvailabilityZone" : "us-east-1c",
 		"CidrBlock" : "172.16.10.0/24",
 		"VpcId" : { "Ref" : "PRODVPC"}
 	},
-      "Metadata": {
-        }
-      },
+      "Metadata": {},
       "DependsOn": [
         "PRODVPC"
       ]
     },
+    "IntRT" : {
+	"Type" : "AWS::EC2::RouteTable",
+	"Properties" : {
+		"VpcId" : { "Ref" : "PRODVPC" },
+		"Tags" : [ { "Key" : "Name", "Value" : "IntRT" } ]
+	} 
+     },
+
+    "ExtRT" : { 
+	"Type" : "AWS::EC2::RouteTable",
+	"Properties" : { 
+		"VpcId" : { "Ref" : "PRODVPC" },
+		"Tags" : [ { "Key" : "Name", "Value" : "ExtRT" } ]
+	}	
+    },
+
+    "ExtRoute" : {
+	"Type" : "AWS::EC2::Route",
+	"Properties" : {
+		"RouteTableId" : { "Ref" : "ExtRT" },
+		"DestinationCidrBlock" : "0.0.0.0/0",
+		"GatewayId" : { "Ref" : "IGWProd" }
+	}
+    },
+
+    "ExtSubAssociation" : {
+	"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+	"Properties" : {
+		"SubnetId" : { "Ref" : "CZEXTAPPSUB" },
+		"RouteTableId" : { "Ref" : "ExtRT" }
+    	}
+    },
+
     "IGWProd": {
       "Type": "AWS::EC2::InternetGateway",
       "Properties": {},
-      "Metadata": {
-        }
-      }
+      "Metadata": {}
     },
     "AttachGateway" : {
 	"Type" : "AWS::EC2::VPCGatewayAttachment",
@@ -69,9 +96,7 @@
     "MyBlog": {
       "Type": "AWS::S3::Bucket",
       "Properties": {},
-      "Metadata": {
-        }
-      }
+      "Metadata": {}
     },
     "AZAPPInst": {
       "Type": "AWS::EC2::Instance",
@@ -84,17 +109,15 @@
 		} ],
 		"InstanceType" : "t2.micro"
 	},
-      "Metadata": {
-        }
-      }
+      "Metadata": {}
     },
     "PRODVPC": {
       "Type": "AWS::EC2::VPC",
       "Properties": {
-		"CidrBlock": "172.16.0.0/16"},
-      "Metadata": {
-        }
-      }
+		"CidrBlock": "172.16.0.0/16",
+		"Tags" : [ {"Key" : "Name", "Value" : "PRODVPC"} ]
+      },
+      "Metadata": {}
     },
     "APPELB": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
@@ -114,8 +137,7 @@
           }
         ]
       },
-      "Metadata": {
-        }
-      }
+      "Metadata": {}
     }
   }
+}
