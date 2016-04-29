@@ -4,7 +4,7 @@ This repository contains AWS Cloudformation templates to provision infrustructur
 
 The template provisions:
 
-	VPC
+        VPC
 
 	SUBNETS
 
