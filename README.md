@@ -2,13 +2,19 @@
 
 This repository contains AWS Cloudformation templates to provision infrustructure for different types of applications from ground up.
 
-It provisions:
-VPC
-SUBNETS
-Internet gateway and Route Table
-EC2 in 4 availability zones
-ELB
-S3 and bucket
+The template provisions:
+
+	VPC
+
+	SUBNETS
+
+	Internet gateway and Route Table
+
+	EC2 in 4 availability zones
+
+	ELB
+
+	S3 and bucket
 
 
 ## How to use it
